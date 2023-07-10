@@ -4,6 +4,6 @@ import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DI().execute();
+  await DI().init();
   runApp(const NotesApp());
 }

@@ -3,6 +3,7 @@ import 'package:clean_arch_example/features/notes/domain/repositories/notes_repo
 import 'package:clean_arch_example/features/notes/domain/usecases/add_note.dart';
 import 'package:clean_arch_example/features/notes/domain/usecases/delete_note.dart';
 import 'package:clean_arch_example/features/notes/domain/usecases/get_notes.dart';
+import 'package:clean_arch_example/features/notes/presentation/cubit/notes_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,16 +18,22 @@ class DI {
 
   DI._internal();
 
-  Future<void> execute() async {
+  Future<void> init() async {
+    // Cubits
+    getIt.registerFactory<NotesCubit>(() => NotesCubit());
+
+    // Data Sources
     final sp = await SharedPreferences.getInstance();
     getIt.registerLazySingleton<SharedPreferences>(() => sp);
 
+    // Repositories
     getIt.registerLazySingleton<NotesRepository>(
       () => NotesRepositoryImp(
         NotesLocalDataSourceImp(sp),
       ),
     );
 
+    // Use Cases
     getIt.registerLazySingleton(() => GetNotes(getIt.get()));
     getIt.registerLazySingleton(() => AddNote(getIt.get()));
     getIt.registerLazySingleton(() => DeleteNote(getIt.get()));

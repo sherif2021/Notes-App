@@ -1,3 +1,4 @@
+import 'package:clean_arch_example/config/di.dart';
 import 'package:clean_arch_example/config/utils/app_strings.dart';
 import 'package:clean_arch_example/config/utils/app_theme.dart';
 import 'package:clean_arch_example/features/notes/presentation/cubit/notes_cubit.dart';
@@ -13,7 +14,7 @@ class NotesApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         RepositoryProvider<NotesCubit>(
-          create: (context) => NotesCubit(),
+          create: (context) => getIt.get<NotesCubit>()..getNotes(),
         ),
       ],
       child: MaterialApp(
