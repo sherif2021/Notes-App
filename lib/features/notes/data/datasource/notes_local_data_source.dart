@@ -18,13 +18,13 @@ class NotesLocalDataSourceImp implements NotesLocalDataSource {
   @override
   Future<void> addNote(Note note) async {
     final companion = note.toCompanion();
-    await _storage.into($NoteModelTable(_storage)).insert(companion);
+    await _storage.noteModel.insertOne(companion);
   }
 
   @override
   Future<void> deleteNote(Note note) async {
     final companion = note.toCompanion();
-    _storage.delete(_storage.noteModel).delete(companion);
+    _storage.noteModel.deleteOne(companion);
   }
 
   @override
