@@ -1,3 +1,5 @@
+import 'package:clean_arch_example/core/extensions/localization.dart';
+import 'package:clean_arch_example/core/helpes/snackbar_messages.dart';
 import 'package:clean_arch_example/core/widgets/center_error_widget.dart';
 import 'package:clean_arch_example/core/widgets/center_loading_widget.dart';
 import 'package:clean_arch_example/features/notes/domain/entities/note.dart';
@@ -14,29 +16,15 @@ class NotesScreen extends StatelessWidget {
     return BlocConsumer<NotesCubit, NotesState>(
       listener: (context, state) {
         if (state is NotesAddSuccessfully) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Note added successfully'),
-            ),
-          );
+          showSuccessMessages(context, tr(context).note_added_successfully);
         } else if (state is NotesAddFailed) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Failed to add note ${state.error}'),
-            ),
-          );
+          showFailedMessages(
+              context, '${tr(context).failed_to_add_note} ${state.error}');
         } else if (state is NotesDeletedSuccessfully) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Note deleted successfully'),
-            ),
-          );
+          showSuccessMessages(context, tr(context).note_added_successfully);
         } else if (state is NotesDeleteFailed) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Failed to delete note ${state.error}'),
-            ),
-          );
+          showFailedMessages(
+              context, '${tr(context).failed_to_delete_note} ${state.error}');
         }
       },
       buildWhen: (previous, current) =>
@@ -78,9 +66,7 @@ class NotesScreen extends StatelessWidget {
                   : const SizedBox(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showAddNoteDialog(context, cubit),
-        label: const Text(
-          'Add Note',
-        ),
+        label: Text(tr(context).add_note),
       ),
     );
   }
@@ -90,7 +76,7 @@ class NotesScreen extends StatelessWidget {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Add Note'),
+        title: Text(tr(context).add_note),
         content: Form(
           key: cubit.addNoteFormKey,
           child: Column(
@@ -98,21 +84,25 @@ class NotesScreen extends StatelessWidget {
             children: [
               TextFormField(
                 controller: cubit.titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Title',
+                decoration: InputDecoration(
+                  labelText: tr(context).title,
                 ),
                 validator: (v) {
-                  if (v == null || v.isEmpty) return 'Title is required';
+                  if (v == null || v.isEmpty) {
+                    return tr(context).title_is_required;
+                  }
                   return null;
                 },
               ),
               TextFormField(
                 controller: cubit.contentController,
-                decoration: const InputDecoration(
-                  labelText: 'Content',
+                decoration: InputDecoration(
+                  labelText: tr(context).content,
                 ),
                 validator: (v) {
-                  if (v == null || v.isEmpty) return 'Content is required';
+                  if (v == null || v.isEmpty) {
+                    return tr(context).content_is_required;
+                  }
                   return null;
                 },
               ),
@@ -129,12 +119,12 @@ class NotesScreen extends StatelessWidget {
               }
             },
             textColor: Colors.green,
-            child: const Text('Add'),
+            child: Text(tr(context).add),
           ),
           MaterialButton(
             onPressed: Navigator.of(context).pop,
             textColor: Colors.red,
-            child: const Text('Close'),
+            child: Text(tr(context).close),
           ),
         ],
       ),
@@ -146,8 +136,8 @@ class NotesScreen extends StatelessWidget {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Note'),
-        content: const Text('Are you sure you want to delete this Note?'),
+        title: Text(tr(context).delete_note),
+        content: Text(tr(context).delete_note_message),
         actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: [
           MaterialButton(
@@ -156,12 +146,12 @@ class NotesScreen extends StatelessWidget {
               context.read<NotesCubit>().deleteNote(note);
             },
             textColor: Colors.red,
-            child: const Text('Delete'),
+            child: Text(tr(context).delete),
           ),
           MaterialButton(
             onPressed: Navigator.of(context).pop,
             textColor: Colors.green,
-            child: const Text('Cancel'),
+            child: Text(tr(context).cancel),
           ),
         ],
       ),

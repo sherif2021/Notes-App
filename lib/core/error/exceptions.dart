@@ -5,3 +5,5 @@ class CustomException implements Exception {
 
   CustomException(this.message);
 }
+
+class InternetException implements Exception {}

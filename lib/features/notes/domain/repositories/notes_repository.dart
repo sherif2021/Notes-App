@@ -3,7 +3,7 @@ import 'package:clean_arch_example/features/notes/domain/entities/note.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class NotesRepository {
-  Either<Failure, List<Note>> getNotes();
+  Future<Either<Failure, List<Note>>> getNotes();
 
   Future<Either<Failure, void>> addNote(Note note);
 

@@ -1,51 +1,36 @@
-import 'dart:convert';
-
-import 'package:clean_arch_example/core/constants/local_storage_keys.dart';
-import 'package:clean_arch_example/features/notes/data/models/note_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:clean_arch_example/core/database/app_database.dart';
+import 'package:clean_arch_example/features/notes/domain/entities/note.dart';
+import 'package:drift/drift.dart';
 
 abstract class NotesLocalDataSource {
-  List<NoteModel> getNotes();
+  Future<List<Note>> getNotes();
 
-  Future<void> addNote(NoteModel note);
+  Future<void> addNote(Note note);
 
-  Future<void> deleteNote(NoteModel note);
+  Future<void> deleteNote(Note note);
 }
 
 class NotesLocalDataSourceImp implements NotesLocalDataSource {
-  final SharedPreferences _storage;
+  final AppDatabase _storage;
 
   NotesLocalDataSourceImp(this._storage);
 
   @override
-  Future<void> addNote(NoteModel note) async {
-    final notes = getNotes();
-    notes.add(note);
-    await _saveNotes(notes);
+  Future<void> addNote(Note note) async {
+    final companion = note.toCompanion();
+    await _storage.into($NoteModelTable(_storage)).insert(companion);
   }
 
   @override
-  Future<void> deleteNote(NoteModel note) async {
-    final notes = getNotes();
-    notes.remove(note);
-    await _saveNotes(notes);
+  Future<void> deleteNote(Note note) async {
+    final companion = note.toCompanion();
+    _storage.delete(_storage.noteModel).delete(companion);
   }
 
   @override
-  List<NoteModel> getNotes() {
-    final data = _storage.getString(LocalStorageKeys.notesKey);
-    if (data == null) return [];
-    return (jsonDecode(data) as List)
-        .map((e) => NoteModel.fromJson(e as Map<String, dynamic>))
-        .toList();
-  }
+  Future<List<Note>> getNotes() async {
+    final result = await _storage.noteModel.all().get();
 
-  Future<void> _saveNotes(List<NoteModel> notes) async {
-    await _storage.setString(
-      LocalStorageKeys.notesKey,
-      jsonEncode(
-        notes.map((e) => e.toJson()).toList(),
-      ),
-    );
+    return result.map(Note.fromData).toList();
   }
 }

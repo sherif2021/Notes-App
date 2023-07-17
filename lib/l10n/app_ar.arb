@@ -1,0 +1,17 @@
+{
+  "note_added_successfully": "تم إضافة الملاحظة بنجاح",
+  "failed_to_add_note": "فشل في إضافة الملاحظة",
+  "note_deleted_successfully": "تم حذف الملاحظة بنجاح",
+  "failed_to_delete_note": "فشل في حذف الملاحظة",
+  "add_note": "إضافة ملاحظة",
+  "title": "العنوان",
+  "title_is_required": "العنوان مطلوب",
+  "content": "المحتوى",
+  "content_is_required": "المحتوى مطلوب",
+  "add": "إضافة",
+  "close": "إغلاق",
+  "delete_note": "حذف ملاحظة",
+  "delete_note_message": "هل أنت متأكد من حذف الملاحظة؟",
+  "delete": "حذف",
+  "cancel": "إلغاء"
+}

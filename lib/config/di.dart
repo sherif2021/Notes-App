@@ -1,3 +1,7 @@
+import 'dart:ui';
+
+import 'package:clean_arch_example/core/database/app_database.dart';
+import 'package:clean_arch_example/features/auth/presentation/cubit/language_cubit.dart';
 import 'package:clean_arch_example/features/notes/data/datasource/notes_local_data_source.dart';
 import 'package:clean_arch_example/features/notes/domain/repositories/notes_repository.dart';
 import 'package:clean_arch_example/features/notes/domain/usecases/add_note.dart';
@@ -21,15 +25,19 @@ class DI {
   Future<void> init() async {
     // Cubits
     getIt.registerFactory<NotesCubit>(() => NotesCubit());
+    getIt.registerFactory<LanguageCubit>(
+        () => LanguageCubit(const Locale('en')));
 
     // Data Sources
     final sp = await SharedPreferences.getInstance();
     getIt.registerLazySingleton<SharedPreferences>(() => sp);
 
+    getIt.registerLazySingleton<AppDatabase>(() => AppDatabase());
+
     // Repositories
     getIt.registerLazySingleton<NotesRepository>(
       () => NotesRepositoryImp(
-        NotesLocalDataSourceImp(sp),
+        NotesLocalDataSourceImp(getIt.get()),
       ),
     );
 

@@ -30,10 +30,11 @@ class NotesCubit extends Cubit<NotesState> {
     if (state is NotesLoading) return;
     if (state is NotesInit) emit(NotesLoading());
 
-    _getNotes(
+    (await _getNotes(
       NoParams(),
-    ).fold((l) => emit(NotesError(getFailureMessage(l))),
-        (r) => emit(NotesData(r)));
+    ))
+        .fold((l) => emit(NotesError(getFailureMessage(l))),
+            (r) => emit(NotesData(r)));
   }
 
   Future<void> addNote() async {

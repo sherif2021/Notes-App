@@ -13,7 +13,7 @@ class NotesRepositoryImp implements NotesRepository {
   @override
   Future<Either<Failure, void>> addNote(Note note) async {
     try {
-      return Right(await _notesLocalDataSource.addNote(note.toModel));
+      return Right(await _notesLocalDataSource.addNote(note));
     } on LocalStorageException {
       return Left(LocalStorageFailure());
     }
@@ -22,16 +22,16 @@ class NotesRepositoryImp implements NotesRepository {
   @override
   Future<Either<Failure, void>> deleteNote(Note note) async {
     try {
-      return Right(await _notesLocalDataSource.deleteNote(note.toModel));
+      return Right(await _notesLocalDataSource.deleteNote(note));
     } on LocalStorageException {
       return Left(LocalStorageFailure());
     }
   }
 
   @override
-  Either<Failure, List<Note>> getNotes()  {
+  Future<Either<Failure, List<Note>>> getNotes() async {
     try {
-      final data = _notesLocalDataSource.getNotes();
+      final data = await _notesLocalDataSource.getNotes();
       return Right(data);
     } on LocalStorageException {
       return Left(LocalStorageFailure());
